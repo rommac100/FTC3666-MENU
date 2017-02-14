@@ -1,0 +1,130 @@
+[
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\auto_settings_close.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\SDK_v2.62\\FtcRobotController\\unspecified\\res\\raw\\auto_settings_close.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/warningmessage.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/FtcCommon-release/res/raw/warningmessage.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warning.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\SDK_v2.62\\FtcRobotController\\unspecified\\res\\raw\\warning.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\errormessage.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\FtcCommon-release\\res\\raw\\errormessage.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\auto_settings_open.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\SDK_v2.62\\FtcRobotController\\unspecified\\res\\raw\\auto_settings_open.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/chimeconnect.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/FtcCommon-release/res/raw/chimeconnect.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/color_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/simple_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\simple_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\simple_vertex_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\nxtstartupsound.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\FtcCommon-release\\res\\raw\\nxtstartupsound.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/nxtstartupsound.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/FtcCommon-release/res/raw/nxtstartupsound.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\color_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\color_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/auto_settings_open.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/SDK_v2.62/FtcRobotController/unspecified/res/raw/auto_settings_open.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/warning.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/SDK_v2.62/FtcRobotController/unspecified/res/raw/warning.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/error.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/SDK_v2.62/FtcRobotController/unspecified/res/raw/error.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/errormessage.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/FtcCommon-release/res/raw/errormessage.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/cube_mesh_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\warningmessage.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\FtcCommon-release\\res\\raw\\warningmessage.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/texture_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/texture_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/cube_mesh_fragment_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/cube_mesh_fragment_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimedisconnect.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\FtcCommon-release\\res\\raw\\chimedisconnect.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\error.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\SDK_v2.62\\FtcRobotController\\unspecified\\res\\raw\\error.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\cube_mesh_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\cube_mesh_vertex_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/auto_settings_cancel.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/SDK_v2.62/FtcRobotController/unspecified/res/raw/auto_settings_cancel.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\texture_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\RobotCore-release\\res\\raw\\texture_vertex_shader.glsl"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/chimedisconnect.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/FtcCommon-release/res/raw/chimedisconnect.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\chimeconnect.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\FtcCommon-release\\res\\raw\\chimeconnect.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/auto_settings_close.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/SDK_v2.62/FtcRobotController/unspecified/res/raw/auto_settings_close.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\res\\merged\\debug\\raw\\auto_settings_cancel.wav",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\TeamCode\\build\\intermediates\\exploded-aar\\SDK_v2.62\\FtcRobotController\\unspecified\\res\\raw\\auto_settings_cancel.wav"
+    },
+    {
+        "merged": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/res/merged/debug/raw/texture_vertex_shader.glsl",
+        "source": "/home/rommac100/Downloads/SDK_v2.62/TeamCode/build/intermediates/exploded-aar/RobotCore-release/res/raw/texture_vertex_shader.glsl"
+    }
+]
