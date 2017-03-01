@@ -77,7 +77,7 @@ public class TankAutoFast extends LinearOpMode {
 
     //Enumeration for Direction choices
     public enum DIRECTION {
-        FORWARD(+0.3), REVERSE(+.25), Clockwise(.25), Counter_Clockwise(-.25), Wiggle(.3);
+        FORWARD(+0.4), REVERSE(+.45), Clockwise(.25), Counter_Clockwise(-.25), Wiggle(.3), Flick(-.3), Fire(.35);
         public final double value;
 
         DIRECTION(double value) {
@@ -110,6 +110,7 @@ public class TankAutoFast extends LinearOpMode {
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        idle();
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -322,6 +323,128 @@ public void bangBang() {
         telemetry.update();
     }
 
+    public void driveOverHaul(DIRECTION direction, int ticks, double cutOffTime, double fireTime) {
+
+        int currentTicksLeft = robot.leftMotor.getCurrentPosition();
+        int currentTicksRight = robot.rightMotor.getCurrentPosition();
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+
+        double timeTemp = runtime.seconds() + cutOffTime;
+        switch (direction) {
+            case FORWARD:
+                robot.leftMotor.setTargetPosition(ticks+currentTicksLeft);
+                robot.rightMotor.setTargetPosition(ticks+currentTicksRight);
+
+                robot.leftMotor.setPower(DIRECTION.FORWARD.value);
+                robot.rightMotor.setPower(DIRECTION.FORWARD.value);
+                double fireTimeTemp = runtime.seconds()+fireTime;
+                while (robot.leftMotor.isBusy() && robot.rightMotor.isBusy() && opModeIsActive() && runtime.seconds()<timeTemp) {
+                    telemetry.addData("motorLeft Pos", robot.leftMotor.getCurrentPosition());
+                    telemetry.update();
+                    if (runtime.seconds() <fireTime) {
+                        voltageProportional();
+                        sleep(200);
+                        robot.spin1Motor.setPower(.42);
+
+                    }
+                }
+                setFPower(0);
+                robot.spin1Motor.setPower(0);
+                robot.spin1Motor.setPower(0);
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+                break;
+
+            case Fire:
+                robot.leftMotor.setTargetPosition(ticks+currentTicksLeft);
+                robot.rightMotor.setTargetPosition(ticks+currentTicksRight);
+
+                robot.leftMotor.setPower(DIRECTION.FORWARD.value);
+                robot.rightMotor.setPower(DIRECTION.FORWARD.value);
+                fireTimeTemp = runtime.seconds()+fireTime;
+                while (robot.leftMotor.isBusy() && robot.rightMotor.isBusy() && opModeIsActive() && runtime.seconds()<timeTemp) {
+                    telemetry.addData("motorLeft Pos", robot.leftMotor.getCurrentPosition());
+                    telemetry.update();
+                    if (runtime.seconds() <fireTime) {
+                        voltageProportional();
+                        sleep(200);
+                        robot.spin1Motor.setPower(.42);
+
+                    }
+                }
+                setFPower(0);
+                robot.spin1Motor.setPower(0);
+                robot.spin1Motor.setPower(0);
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+                break;
+            case REVERSE:
+                robot.leftMotor.setTargetPosition(-ticks+currentTicksLeft);
+                robot.rightMotor.setTargetPosition(-ticks+currentTicksRight);
+
+                robot.leftMotor.setPower(DIRECTION.REVERSE.value);
+                robot.rightMotor.setPower(DIRECTION.REVERSE.value);
+                while (robot.leftMotor.isBusy() && robot.rightMotor.isBusy() && opModeIsActive() && runtime.seconds() < timeTemp) {
+                    telemetry.addData("motorLeft Pos", robot.leftMotor.getCurrentPosition());
+                    telemetry.update();
+                    if (runtime.seconds() <fireTime) {
+                        if (runtime.seconds() <fireTime-2)
+                        {
+                            voltageProportional();
+                        }
+                        else
+                        {
+                            robot.spin1Motor.setPower(.1);
+                        }
+
+                    }
+                }
+                setFPower(0);
+                robot.spin1Motor.setPower(0);
+
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+                break;
+            case Flick:
+                robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                robot.flickServoOut();
+                robot.driveMotors(direction.value, direction.value);
+
+                while (opModeIsActive() && !robot.limit1.returnState() && robot.limit2.returnState() && runtime.seconds() <timeTemp)
+                {
+                    telemetry.addData("limit1", robot.limit1.returnState());
+                    telemetry.addData("limit2", robot.limit2.returnState());
+                    telemetry.update();
+                }
+                driveOverHaul(DIRECTION.FORWARD,distance(2),2,0);
+                robot.flickServoIn();
+                driveOverHaul(DIRECTION.REVERSE,distance(5),3,0);
+                robot.driveMotors(0,0);
+                break;
+        }
+    }
+
+
+    private double targetVoltage = 13;
+    private double voltage;
+
+    private double targetVoltageTurning = 12.5;
+
+    public void voltageProportional()
+    {
+        voltage = robot.getBatteryVoltage();
+        double kP = .15;
+        double error = targetVoltage - voltage;
+        motorOut = (error * kP) + .75;
+        motorOut = Range.clip(motorOut, 0, 1);
+        setFPower(motorOut);
+    }
+
     @Override
     public void runOpMode()
     {
@@ -356,18 +479,27 @@ public void bangBang() {
 
             //drive(DIRECTION.REVERSE, distance(20));
             //flyWheelShooter(6);
-
+            robot.flickServoOut();
             turnWithoutEncoders(DIRECTION.Counter_Clockwise);
-            drive(DIRECTION.REVERSE, distance(4), 1.5);
+
+            driveOverHaul(DIRECTION.Flick,0,2,0);
+            //drive(DIRECTION.REVERSE, distance(4), 1.5);
             drive(DIRECTION.FORWARD, distance(4),1.5);
-            drive(DIRECTION.FORWARD, distance(22),8);
-            flyWheelShooter(4);
+            drive(DIRECTION.FORWARD, distance(25),8);
+            flyWheelShooter(3);
             drive(DIRECTION.REVERSE, distance(16),6);
-            driveWiggle(robot.ticksPerInch/2, robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
+            //driveWiggle(robot.ticksPerInch/2, robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
             checkColour(0);
-            drive(DIRECTION.FORWARD,distance(25), 9.375);
+            drive(DIRECTION.FORWARD, distance(48), 15);
+            /*
+            turnEncoder(180);
+            //adjustVoltage();
+            arcedTurn(DIRECTION.Counter_Clockwise, .35, .75, 3.2, true, robot.getBatteryVoltage());
+            drive(DIRECTION.REVERSE, distance(18), 9);
+            checkColour(0);
+            //drive(DIRECTION.FORWARD,distance(25), 9.375);
 
-
+*/
 
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
@@ -377,6 +509,112 @@ public void bangBang() {
         }
     }
 
+    public void turnEncoder(int angle)
+    {
+        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        int ticks = angle * distance(.15);
+        if (angle > 0)
+        {
+            robot.leftMotor.setTargetPosition(ticks+robot.leftMotor.getCurrentPosition());
+            robot.rightMotor.setTargetPosition(-ticks+robot.rightMotor.getCurrentPosition());
+            robot.driveMotors(DIRECTION.Clockwise.value, DIRECTION.Clockwise.value);
+            while (opModeIsActive() && robot.leftMotor.isBusy() && robot.rightMotor.isBusy())
+            {
+
+            }
+            robot.driveMotors(0,0);
+        }
+        else if (angle< 0)
+        {
+            robot.leftMotor.setTargetPosition((ticks+robot.leftMotor.getCurrentPosition()));
+            robot.rightMotor.setTargetPosition(-ticks+robot.rightMotor.getCurrentPosition());
+            robot.driveMotors(DIRECTION.Counter_Clockwise.value,DIRECTION.Counter_Clockwise.value);
+
+            while (opModeIsActive() && robot.leftMotor.isBusy() && robot.rightMotor.isBusy())
+            {
+
+            }
+            robot.driveMotors(0,0);
+        }
+    }
+
+    public void arcedTurn(DIRECTION direction, double leftPower, double rightPower, double cutOffTime, boolean variable, double currentBatteryVoltage)
+    {
+        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        double leftPowerInvert = 0;
+        double rightPowerInvert = 0;
+
+
+
+        if (alliance.equals("Red Alliance"))
+        {
+            leftPowerInvert = -leftPower;
+            rightPowerInvert = -rightPower;
+        }
+        else if (alliance.equals("Blue Alliance"))
+        {
+            leftPowerInvert = -rightPower;
+            rightPowerInvert = -leftPower;
+        }
+
+        if (direction == DIRECTION.Counter_Clockwise)
+        {
+            double tempTime = runtime.seconds() + cutOffTime;
+
+            robot.leftMotor.setPower(leftPowerInvert);
+            robot.rightMotor.setPower(rightPowerInvert);
+
+            double temptime = runtime.seconds();
+
+
+            double powerLeft1 = 0;
+            double powerRight1 = 0;
+
+            double powerLeft2 = 0;
+            double powerRight2 = 0;
+
+
+            if (variable)
+            {
+                powerLeft1 = .2;
+                powerRight1 = .95;
+
+                powerLeft2 = .2;
+                powerRight2 = .65;
+            }
+            while (runtime.seconds() <tempTime && opModeIsActive())
+            {
+                if (variable) {
+
+                    if (runtime.seconds() < tempTime-2.7-temptime)
+                    {
+                        robot.driveMotors(powerLeft1,powerRight1);
+                    }
+                    else if (runtime.seconds() < tempTime-1.1-temptime) {
+                        robot.driveMotors(powerLeft2, powerRight2);
+                    }
+                }
+
+
+            }
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+            robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        else
+        {
+
+        }
+    }
     public void turnWithoutEncoders(DIRECTION direction)
     {
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -403,7 +641,7 @@ public void bangBang() {
 
         if (direction == DIRECTION.Counter_Clockwise)
         {
-            double tempTime = runtime.seconds() + 2.67;
+            double tempTime = runtime.seconds() + 2.7;
 
             robot.leftMotor.setPower(leftPowerInvert);
             robot.rightMotor.setPower(rightPowerInvert);
@@ -414,6 +652,8 @@ public void bangBang() {
             }
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
+            telemetry.addData("motorLeft Ticks", robot.leftMotor.getCurrentPosition());
+            telemetry.addData("motorRight Ticks", robot.rightMotor.getCurrentPosition())
             robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -456,7 +696,7 @@ public void bangBang() {
 
 
     }
-    private void checkColour(double attemptsMade)
+    public void checkColour(double attemptsMade)
     {
         //Values that we care from the colour sensor
 

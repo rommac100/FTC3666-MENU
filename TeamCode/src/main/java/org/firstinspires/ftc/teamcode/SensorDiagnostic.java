@@ -64,7 +64,7 @@ import static java.lang.Thread.sleep;
 public class SensorDiagnostic extends OpMode
 {
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
     HardwareTank robot = new HardwareTank();
 
     private double maxDriveTrain;
@@ -75,6 +75,9 @@ public class SensorDiagnostic extends OpMode
     private double leftQ;
     private double centerQ;
     private double rightQ;
+    private boolean limit1;
+    private boolean limit2;
+    double distance = 0;
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -105,7 +108,9 @@ public class SensorDiagnostic extends OpMode
             telemetry.addData("CRGB", "%5d %5d %5d %5d",
                     crgb[0], crgb[1], crgb[2], crgb[3]);
         }
+        distance = robot.ping.getDistanceCM(runtime);
 
+        telemetry.addData("Distance", distance);
     }
 
     /*
@@ -118,6 +123,7 @@ public class SensorDiagnostic extends OpMode
         leftQ  = robot.device.getAnalogInputVoltage(3);
         centerQ= robot.device.getAnalogInputVoltage(0);
         rightQ = robot.device.getAnalogInputVoltage(5);
+
 
         for (int i=0; i<robot.ports.length; i++) {
             int[] crgb = robot.muxColor.getCRGB(robot.ports[i]);
@@ -135,8 +141,10 @@ public class SensorDiagnostic extends OpMode
         telemetry.addData("Red  ", robot.colourSensor.red());
         telemetry.addData("Green", robot.colourSensor.green());
         telemetry.addData("Blue ", robot.colourSensor.blue());
-
-        telemetry.addData("ods Raw Light", robot.ods.getRawLightDetected());
+        telemetry.addData("Distance", distance);
+        telemetry.addData("endStop1", robot.limit1.returnState());
+        telemetry.addData("endStop2", robot.limit2.returnState());
+        //robot.ping.turnOn();
     }
 
     @Override

@@ -52,8 +52,10 @@ public class TankTeleopIterativeMain extends OpMode
 
     private double tolerance = 0.5e-6;
 
-    private double targetVoltage = 12.5;
+    private double targetVoltage = 13;
     private double voltage;
+
+    public boolean toggleFlickers = false;
 
     @Override
     public void init() {
@@ -110,6 +112,7 @@ public class TankTeleopIterativeMain extends OpMode
         fLastEncoder = fEncoder;
         fLastVelocityTime = fVelocityTime;
     }
+
 
     private void setFPower(double power)
     {
@@ -197,14 +200,15 @@ public class TankTeleopIterativeMain extends OpMode
         }
     }
 //A backup just incase bang bang doesn't work, we use this instead which compensates flywheel speed based upon battery power.
-    public void voltageProportional()
-    {
-        double kP = .15;
-        double error = targetVoltage - voltage;
-        motorOut = (error * kP) + .25;
-        motorOut = Range.clip(motorOut, 0, 1);
-        setFPower(motorOut);
-    }
+public void voltageProportional()
+{
+    voltage = robot.getBatteryVoltage();
+    double kP = .15;
+    double error = targetVoltage - voltage;
+    motorOut = (error * kP) + .55;
+    motorOut = Range.clip(motorOut, 0, 1);
+    setFPower(motorOut);
+}
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -292,6 +296,7 @@ public class TankTeleopIterativeMain extends OpMode
         printVelocity();
 
 
+
          //adjustPID();
         robot.innerIntakePower = gamepad2.right_stick_y;
         robot.outerIntakePower = gamepad2.left_stick_y;
@@ -304,12 +309,7 @@ public class TankTeleopIterativeMain extends OpMode
          if (gamepad2.dpad_right) {
             robot.systemFlyPower = robot.defaultFlyPower;
         } else if (gamepad2.right_trigger > 0) {
-             bangBang();
-             //voltageProportional();
-             //flagWave();
-
-             //robot.flyWheelMotor1.setPower(robot.systemFlyPower);
-            //robot.flyWheelMotor2.setPower(robot.systemFlyPower);
+             voltageProportional();
         }
          else if (robot.innerIntakePower > 0)
          {
@@ -339,6 +339,15 @@ public class TankTeleopIterativeMain extends OpMode
         else
         {
             robot.linearSlideMovement(0);
+        }
+
+        if (gamepad1.right_trigger > 0)
+        {
+            robot.flickServoOut();
+        }
+        else
+        {
+            robot.flickServoIn();
         }
 
 
@@ -375,17 +384,6 @@ public class TankTeleopIterativeMain extends OpMode
         }
 
         //Controlling of Drift - DcMotor Braking configuration
-        if (gamepad1.y && drift) {
-            robot.leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            robot.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            drift = false;
-        } else if (gamepad1.y && !drift) {
-            robot.leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            drift = true;
-        }
-
         //Marvin Servo Control, using 180 degree Servo on the Intake side of the Robot
 
         //Normalization of Intake System values, since it is driven by joysticks

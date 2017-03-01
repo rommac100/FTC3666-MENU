@@ -7,10 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import org.firstinspires.ftc.robotcontroller.external.samples.MultiplexColorSensor;
+import org.firstinspires.ftc.robotcontroller.external.samples.PingDistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 /**
  * This is NOT an opmode.
  *
@@ -40,30 +43,32 @@ public class HardwareTank
     public DcMotor  flyWheelMotor2 = null;
     public DcMotor linearSlideMotor1 = null;
     public DcMotor linearSlideMotor2 = null;
-    public Servo    beaconServo = null;
-    public Servo    flagServo = null;
     public Servo    capBallServo1 = null;
     public Servo    capBallServo2 = null;
+    public Servo    flickerServo1 = null;
+    public Servo    flickerServo2 = null;
+
     public DeviceInterfaceModule device = null;
     public ColorSensor colourSensor = null;
-    public OpticalDistanceSensor ods = null;
-    public final double distancePerRev = 18.84;
+    public PingDistanceSensor ping = null;
+    public LimitSwitch limit1 = null;
+    public LimitSwitch limit2 = null;
+
+    public VoltageSensor voltageSensor;
+
     public final double ticksPerInch = 53.4776;
     public double leftDrivePower;       //power level for left side drive train motor
     public double rightDrivePower;      //power level for right side drive train motor
     public double innerIntakePower;     //power level for the inner intake
     public double outerIntakePower;     //power level for the outer intake
     public double systemFlyPower;       //current power level for fly motors
-    public double marvinPos = .5;
     public double defaultFlyPower = .7;
-    public double linearSlidePower;
     public double liveFlyPowerSetting = defaultFlyPower;
-    public int maxSlideHeight = 1000;   //In theory this is low eneugh of a end height that we will have no problems in the short run, and can fine tune further from here.
-                                        //should be less than one rotation right?
-    public int ledChannel = 5;
 
-    public double minBangValue = .3;// for bangbang for the flywheels
-    public double maxBangValue = .45; // for bangbang for the flywheels
+    public double voltage = 0;
+
+    public double minBangValue = .4;// for bangbang for the flywheels
+    public double maxBangValue = .5; // for bangbang for the flywheels
 
     public MultiplexColorSensor muxColor;
     public int[] ports = {0, 1};
@@ -100,10 +105,17 @@ public class HardwareTank
         flyWheelMotor1.setDirection(DcMotor.Direction.REVERSE);
         device = hwMap.deviceInterfaceModule.get("deviceINT");
         colourSensor = hwMap.colorSensor.get("colour_sensor");
-        ods = hwMap.opticalDistanceSensor.get("ods");
+
+        ping = new PingDistanceSensor(hwMap,"ping");
+        limit1 = new LimitSwitch(hwMap, "limit1");
+        limit2 = new LimitSwitch(hwMap, "limit2");
+
 
         capBallServo1 = hwMap.servo.get("cap1");
         capBallServo2 = hwMap.servo.get("cap2");
+
+        flickerServo1 = hwMap.servo.get("flick1");
+        flickerServo2 = hwMap.servo.get("flick2");
 
         linearSlideMotor1 = hwMap.dcMotor.get("linear1");
         linearSlideMotor2 = hwMap.dcMotor.get("linear2");
@@ -126,10 +138,10 @@ public class HardwareTank
         linearSlideMotor2.setPower(0);
 
 
-
         capBallServo1.setPosition(0);
         capBallServo2.setPosition(0);
 
+flickServoIn();
 
 
 
@@ -139,6 +151,26 @@ public class HardwareTank
 
         // Define and initialize ALL installed servos.
 
+    }
+    public double getBatteryVoltage() {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : hwMap.voltageSensor) {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0) {
+                result = Math.min(result, voltage);
+            }
+        }
+        return result;
+    }
+    public void flickServoOut()
+    {
+        flickerServo1.setPosition(.75);
+        flickerServo2.setPosition(.2);
+    }
+    public void flickServoIn()
+    {
+        flickerServo1.setPosition(.15);
+        flickerServo2.setPosition(.88);
     }
 
     public void driveMotors(double powerLeft, double powerRight)

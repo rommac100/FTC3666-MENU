@@ -175,17 +175,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:visibility="invisible"
       android:text="" />
 
-    <ImageView android:alpha="0.6"
-        android:id="@+id/frogbotsLogo"
-        android:src="@drawable/frogbotslogo"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:adjustViewBounds="true"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
 
   </RelativeLayout>
 

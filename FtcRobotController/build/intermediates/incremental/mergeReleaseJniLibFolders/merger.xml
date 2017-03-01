@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/src/release/jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/home/rommac100/Documents/SDK_v2.62/FtcRobotController/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/home/rommac100/Documents/SDK_v2.62/FtcRobotController/src/release/jniLibs"/></dataSet></merger>

@@ -1,26 +1,14 @@
 [
     {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\warning.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\warning.png"
+        "merged": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_launcher.png",
+        "source": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_launcher.png"
     },
     {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/frogbotslogo.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/frogbotslogo.png"
+        "merged": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/frogbotslogo.png",
+        "source": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/frogbotslogo.png"
     },
     {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\frogbotslogo.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\frogbotslogo.png"
-    },
-    {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/ic_launcher.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/ic_launcher.png"
-    },
-    {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xxhdpi-v4\\ic_launcher.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/C:\\Users\\Michael\\Documents\\FROGbots\\FTC_SDK\\SDK_v2.62\\FtcRobotController\\build\\intermediates\\bundles\\debug\\res\\drawable-xxhdpi-v4\\ic_launcher.png"
-    },
-    {
-        "merged": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/warning.png",
-        "source": "/home/rommac100/Downloads/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/warning.png"
+        "merged": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/res/merged/androidTest/debug/drawable-xxhdpi-v4/warning.png",
+        "source": "/home/rommac100/Documents/SDK_v2.62/FtcRobotController/build/intermediates/bundles/debug/res/drawable-xxhdpi-v4/warning.png"
     }
 ]

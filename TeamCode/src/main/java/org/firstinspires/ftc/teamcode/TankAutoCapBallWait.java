@@ -190,11 +190,11 @@ public class TankAutoCapBallWait extends LinearOpMode {
         runtime.reset();
         if (opModeIsActive()) {
 
-            while (runtime.seconds() < 10 && opModeIsActive())
+            while (runtime.seconds() < 15 && opModeIsActive())
             {}
             drive(DIRECTION.FORWARD, distance(42));
             sleep(1000);
-            flyWheelShooter(8);
+            flyWheelShooter(6);
             drive(DIRECTION.FORWARD, distance(38));
 
 
