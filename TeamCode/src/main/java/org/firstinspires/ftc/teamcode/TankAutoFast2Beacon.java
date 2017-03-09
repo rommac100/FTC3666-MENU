@@ -50,6 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 
@@ -57,8 +58,7 @@ import java.util.Locale;
 
 
 /*
-
-   This auto goes for the one or two beacons depending on the settings selected, and will shoot two projectiles into the center vortex. Essentially a 90 point autonomous
+   This auto goes for the one or two beacons depending on the settings selected, and will shoot two projectiles into the center vortex, essentially a 90 point autonomous.
  */
 
 @Autonomous(name="Tank: AutoFastTesting", group="Tank")
@@ -80,7 +80,7 @@ public class TankAutoFast2Beacon extends LinearOpMode {
 
     //Enumeration for Direction choices
     public enum DIRECTION {
-        FORWARD(+0.45), REVERSE(+.45), Clockwise(.4), Counter_Clockwise(.25), Wiggle(.3), Flick(-.3), Fire(.35);
+        FORWARD(+0.45), REVERSE(+.45), Clockwise(.4), Counter_Clockwise(.25), Wiggle(.3), Flick(-.3), Fire(.35), Distance(-.4);
         public final double value;
 
         DIRECTION(double value) {
@@ -113,8 +113,15 @@ public class TankAutoFast2Beacon extends LinearOpMode {
     private double voltage;
 
     private double targetVoltageTurning = 12.5;
+    private double time1 = 0;
+    private double time2 = 0;
 
 
+
+    /*
+    Our main drive method. It uses a enumeration for the selection of direction and power. And a long switch structure to decide what happens afterwards.
+    Our flicker's system is part of this this particular method. The flickers are deployed before we hit the wall in order to attempt for the irregularities of our arced turn.
+     */
     public void driveOverHaul(DIRECTION direction, int ticks, double cutOffTime, double fireTime) {
 
         int currentTicksLeft = robot.leftMotor.getCurrentPosition();
@@ -142,6 +149,7 @@ public class TankAutoFast2Beacon extends LinearOpMode {
                         robot.spin1Motor.setPower(.42);
 
                     }
+                    idle();
                 }
                 setFPower(0);
                 robot.spin1Motor.setPower(0);
@@ -156,7 +164,6 @@ public class TankAutoFast2Beacon extends LinearOpMode {
 
                 robot.leftMotor.setPower(DIRECTION.FORWARD.value);
                 robot.rightMotor.setPower(DIRECTION.FORWARD.value);
-                fireTimeTemp = runtime.seconds()+fireTime;
                 while (robot.leftMotor.isBusy() && robot.rightMotor.isBusy() && opModeIsActive() && runtime.seconds()<timeTemp) {
                     telemetry.addData("motorLeft Pos", robot.leftMotor.getCurrentPosition());
                     telemetry.update();
@@ -182,6 +189,7 @@ public class TankAutoFast2Beacon extends LinearOpMode {
                 while (robot.leftMotor.isBusy() && robot.rightMotor.isBusy() && opModeIsActive() && runtime.seconds() < timeTemp) {
                     telemetry.addData("motorLeft Pos", robot.leftMotor.getCurrentPosition());
                     telemetry.update();
+                    idle();
                     if (runtime.seconds() <fireTime) {
                         if (runtime.seconds() <fireTime-2)
                         {
@@ -218,6 +226,18 @@ public class TankAutoFast2Beacon extends LinearOpMode {
                 driveOverHaul(DIRECTION.REVERSE,distance(5),3,0);
                 robot.driveMotors(0,0);
                 break;
+            case Distance:
+                robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                robot.driveMotors(direction.value, direction.value);
+
+                while (opModeIsActive() && robot.ultraSonic.getDistance(DistanceUnit.INCH) > ticks)
+                {
+                    telemetry.addData("distance", robot.ultraSonic.getDistance(DistanceUnit.INCH));
+                    idle();
+                }
+                robot.driveMotors(0,0);
         }
     }
 
@@ -267,43 +287,9 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         fLastVelocityTime = fVelocityTime;
     }
 
-    public boolean turningDriveBoolean(double power, int angle, float angleDesired)
-    {
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        boolean temp = true;
-
-        if (angle < 0)
-        {
-            robot.leftDrivePower = -power;
-            robot.rightDrivePower = power;
-
-            if (getHeading() < angleDesired)
-            {
-                robot.leftDrivePower = 0;
-                robot.rightDrivePower = 0;
-                temp = false;
-
-            }
-            robot.leftMotor.setPower(robot.leftDrivePower);
-            robot.rightMotor.setPower(robot.rightDrivePower);
-        }
-        else if (angle > 0)
-        {
-            robot.leftDrivePower = power;
-            robot.rightDrivePower = -power;
-
-            if (getHeading() > angleDesired)
-            {
-                robot.leftDrivePower = 0;
-                robot.rightDrivePower =0;
-                temp = false;
-            }
-            robot.leftMotor.setPower(robot.leftDrivePower);
-            robot.rightMotor.setPower(robot.rightDrivePower);
-        }
-        return temp;
-    }
+    /*
+    This simple method turns our robot based upon an angle and uses encoders.
+     */
 
     public void turnEncoder(int angle)
     {
@@ -338,121 +324,6 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         }
     }
 
-    private double adjustAngle(double angle)
-    {
-        while (angle > 180) angle -= 360;
-        while (angle <= -180) angle += 360;
-        return angle;
-    }
-
-    public void turnDrive(double angle)
-    {
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        DIRECTION direction = DIRECTION.Clockwise;
-
-        double desiredAngle = getHeading() + angle;
-
-
-        desiredAngle = adjustAngle(desiredAngle);
-        if (desiredAngle > 0)
-        {
-            direction = DIRECTION.Clockwise;
-        }
-        else if (desiredAngle < 0)
-        {
-            direction = DIRECTION.Counter_Clockwise;
-        }
-        telemetry.addData("desiredAngle", desiredAngle);
-        switch (direction)
-        {
-            case Clockwise:
-                robot.leftDrivePower = DIRECTION.Clockwise.value;
-                robot.rightDrivePower = -robot.leftDrivePower;
-
-                while (opModeIsActive() && getHeading() < desiredAngle)
-                {
-                    composeTelemetry();
-                    telemetry.update();
-                    robot.leftMotor.setPower(robot.leftDrivePower);
-                    robot.rightMotor.setPower(robot.rightDrivePower);
-                }
-                robot.rightMotor.setPower(0);
-                robot.leftMotor.setPower(0);
-                break;
-            case Counter_Clockwise:
-                robot.rightDrivePower = DIRECTION.Counter_Clockwise.value;
-                robot.leftDrivePower = robot.rightDrivePower;
-
-                while (opModeIsActive() && getHeading() > desiredAngle)
-                {
-                    telemetry.update();
-                    composeTelemetry();
-                    robot.leftMotor.setPower(robot.leftDrivePower);
-                    robot.rightMotor.setPower(robot.rightDrivePower);
-                }
-
-
-
-
-        }
-    }
-
-    public void turningDrive(double power, int angle)
-    {
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        float angleDesired = AngleUnit.DEGREES.fromUnit(angles.angleUnit,angles.firstAngle)+angle;
-
-        if (angle < 0) {
-            while (AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle) < angleDesired && opModeIsActive()) {
-                robot.leftDrivePower = power;
-                robot.rightDrivePower = -power;
-
-                if (AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle) < angleDesired) {
-                    robot.leftDrivePower = 0;
-                    robot.rightDrivePower = 0;
-                    robot.leftMotor.setPower(robot.leftDrivePower);
-                    robot.rightMotor.setPower(robot.rightDrivePower);
-                    break;
-                }
-
-                robot.leftMotor.setPower(robot.leftDrivePower);
-                robot.rightMotor.setPower(robot.rightDrivePower);
-
-                telemetry.update();
-
-            }
-            robot.leftMotor.setPower(robot.leftDrivePower);
-            robot.rightMotor.setPower(robot.rightDrivePower);
-        }
-
-        else {
-            while (AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle) > angleDesired && opModeIsActive()) {
-                robot.leftDrivePower = -power;
-                robot.rightDrivePower = power;
-
-                if (AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle) > angleDesired) {
-                    robot.leftDrivePower = 0;
-                    robot.rightDrivePower = 0;
-                    robot.leftMotor.setPower(robot.leftDrivePower);
-                    robot.rightMotor.setPower(robot.rightDrivePower);
-                    break;
-                }
-                robot.leftMotor.setPower(robot.leftDrivePower);
-                robot.rightMotor.setPower(robot.rightDrivePower);
-                telemetry.update();
-
-
-            }
-            robot.leftMotor.setPower(robot.leftDrivePower);
-            robot.rightMotor.setPower(robot.rightDrivePower);
-        }
-        robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
     public void initalize()
     {
         robot.init(hardwareMap);
@@ -481,6 +352,11 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         telemetry.update();
 
     }
+
+    /*
+    A form of battery compensation for our robot, we essentially spin our flywheel motors in order
+    to do a form of battery voltage regulation by reducing the power of the overall system.
+     */
     private void adjustVoltage()
     {
         double currentFlyPower = 0;
@@ -492,45 +368,54 @@ public class TankAutoFast2Beacon extends LinearOpMode {
        }
     }
 
+    //selects whether or not to go fro second beacon if the time amount is correct.
+
     public void alternativeRoutes()
     {
         if (runtime.seconds() < 7 && firstBeacon)
         {
             driveOverHaul(DIRECTION.FORWARD,distance(42), 8,0);
         }
-        else if (runtime.seconds() > 12 && firstBeacon)
-        {
-           // if (robot.getBatteryVoltage() < 13 && robot.getBatteryVoltage() < 12.8) {
+        else if (runtime.seconds() > 12 && firstBeacon) {
+
+            //This form of driving turns 92 ish degrees and then drives towards the second beacon, and turns again to face the beacon and attempts to capture it.
+            driveOverHaul(DIRECTION.FORWARD, distance(7), 2, 0);
+            turnEncoder(-92);
+            adjustVoltage();
+            driveOverHaul(DIRECTION.REVERSE, distance(48), 15, 0);
+            turnEncoder(92);
+            driveOverHaul(DIRECTION.REVERSE, distance(16), 9, 0);
+            checkColour(0);
+               /* An alternate type of turn in order to get the second beacon. It is uses a variable arc instead of a turn and drive method.
                 driveOverHaul(DIRECTION.FORWARD, distance(7), 2, 0);
                 turnEncoder(180);
                 adjustVoltage();
                 arcedTurn(DIRECTION.Counter_Clockwise, .35, .75, 3.2, true, robot.getBatteryVoltage());
                 driveOverHaul(DIRECTION.REVERSE, distance(16), 9, 0);
                 checkColour(0);
-            }//}
-                /*
-            driveOverHaul(DIRECTION.FORWARD,distance(25), 9.375,0);
-            turnEncoder(-90);
-            driveOverHaul(DIRECTION.REVERSE,distance(47), 10,0);
-            turnEncoder(85);
-            driveOverHaul(DIRECTION.REVERSE,distance(25),10,0);
-            checkColour(0);
-            */
-
+                */
+        }
     }
 
+
+    /*
+    In this function we do our arced turn to the first beacon which we decided was the most effective solution to the problem of time and accuracy for our robot specifically.
+    Then it attempts to drive foward from the beacon and fire while doing so, then it checks whether or not the first press of the beacon was correct.
+     */
     public void beacon1(){
         robot.flickServoOut();
         arcedTurn(DIRECTION.Counter_Clockwise, .505,.8,2.65, false, robot.getBatteryVoltage());
         driveOverHaul(DIRECTION.Flick,0,3,0);
-        //driveOverHaul(DIRECTION.REVERSE, distance(8), 1.5,0);
+        time1 = runtime.seconds();
         driveOverHaul(DIRECTION.FORWARD, distance(4),1.5,0);
         driveOverHaul(DIRECTION.FORWARD, distance(4),1.5,0);
-        driveOverHaul(DIRECTION.Fire, distance(24),10,10);
+        driveOverHaul(DIRECTION.Fire, distance(18),10,10);
         driveOverHaul(DIRECTION.REVERSE, distance(23),8,0);
-        //driveOverHaul(DIRECTION.Flick,0,5,0);
-        //driveOverHaul(DIRECTION.Flick, 0, 10,0);
-        //driveOverHaul(DIRECTION.FORWARD,distance(2),5,0);
+        time2 = runtime.seconds();
+        if (time1-time2 < 5)
+        {
+            sleep((long)(5-(time1-time2)*1000));
+        }
         checkColour(0);
         firstBeacon = true;
     }
@@ -540,12 +425,6 @@ public class TankAutoFast2Beacon extends LinearOpMode {
     @Override
     public void runOpMode()
     {
-
-
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -570,13 +449,7 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         if (opModeIsActive()) {
             adjustVoltage();
            beacon1();
-            driveOverHaul(DIRECTION.FORWARD, distance(7), 2, 0);
-            turnEncoder(180);
-            adjustVoltage();
-            arcedTurn(DIRECTION.Counter_Clockwise, .35, .75, 3.2, true, robot.getBatteryVoltage());
-            driveOverHaul(DIRECTION.REVERSE, distance(16), 9, 0);
-            checkColour(0);
-               // alternativeRoutes();
+            alternativeRoutes();
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
 
@@ -585,6 +458,13 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         }
     }
 
+
+    /*
+    This particular method comprises the entirety of our peculiar arcedTurning function of our robot.
+    We use this in order to get the first beacon and as a backup for the second beacon.
+    It uses the concept of time, and varying the speed of each drive train motor in order to get the correct arc.
+    Also in this function we can vary the power of the motors in order to get a not constant arc but varied arc which is used for the second beacon if needed.
+     */
     public void arcedTurn(DIRECTION direction, double leftPower, double rightPower, double cutOffTime, boolean variable, double currentBatteryVoltage)
     {
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -594,9 +474,6 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         robot.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         double leftPowerInvert = 0;
         double rightPowerInvert = 0;
-
-        double error = targetVoltageTurning-currentBatteryVoltage;
-        double kp = .15;
 
         if (alliance.equals("Red Alliance"))
         {
@@ -660,49 +537,13 @@ public class TankAutoFast2Beacon extends LinearOpMode {
         }
     }
 
-    public void arcedTurnBackup(DIRECTION direction)
-    {
-        robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        double leftPowerInvert = -1;
-        double rightPowerInvert = -1;
+    /*
+    This checkColour method is a recursion form of loop that continues checking the beacon if it is not the correct colour.
+    It is necessary to have this form loop do to our beacon capturing being done with a flat plate.
 
-        if (alliance.equals("Red Alliance"))
-        {
-            leftPowerInvert = -.505;
-            rightPowerInvert = -.8;
-        }
-        else if (alliance.equals("Blue Alliance"))
-        {
-            leftPowerInvert = -.8;
-            rightPowerInvert = -.505;
-        }
-
-        if (direction == DIRECTION.Counter_Clockwise)
-        {
-            double tempTime = runtime.seconds() + 2.6;
-
-            robot.leftMotor.setPower(leftPowerInvert);
-            robot.rightMotor.setPower(rightPowerInvert);
-            while (runtime.seconds() <tempTime && opModeIsActive())
-            {
-
-
-            }
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0);
-            robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        else
-        {
-
-        }
-    }
-
+    We utilize do colour sensors due to the arc of our turn being slightly different for each alliance.
+     */
     private void checkColour(double attemptsMade)
     {
         //Values that we care from the colour sensors
@@ -720,16 +561,14 @@ public class TankAutoFast2Beacon extends LinearOpMode {
 
                 }
                 attemptsMade += 1;
-                //driveWiggle(robot.ticksPerInch/2, robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
                 driveOverHaul(DIRECTION.REVERSE, distance(17), 6.375,0);
 
                 driveOverHaul(DIRECTION.FORWARD, distance(5),1.5625,0);
                 checkColour(attemptsMade);
             }
-            else if (colourSensor2[1] > colourSensor2[3] && alliance.equals("Blue Alliance"))
+            else if (colourSensor1[1] > colourSensor1[3] && alliance.equals("Blue Alliance"))
             {
                 attemptsMade += 1;
-                //driveWiggle(robot.ticksPerInch/2, robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
                 driveOverHaul(DIRECTION.REVERSE, distance(17),6.375,0);
 
                 driveOverHaul(DIRECTION.FORWARD, distance(5),1.5625,0);

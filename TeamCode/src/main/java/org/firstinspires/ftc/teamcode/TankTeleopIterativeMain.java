@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,10 +27,8 @@ public class TankTeleopIterativeMain extends OpMode
     private double flyWheelDelta = .1;
     private double flyWheelPower = robot.defaultFlyPower;
 
-    double tbhI = 300.0;
     private double kP = 9000000.0;
     private double kI = 0.0;
-    //private double kD = 380000;
     private double kD = 10000.0;
 
     private double integral = 0.0;
@@ -46,17 +47,34 @@ public class TankTeleopIterativeMain extends OpMode
     private long fVelocityTime = 0;
     private long fLastVelocityTime = 0;
 
-    private double place = 0.1;
-
-    private boolean firstCross;
-
     private double tolerance = 0.5e-6;
 
     private double targetVoltage = 13;
     private double voltage;
 
-    public boolean toggleFlickers = false;
+    private String particlePref;
+    private String beaconPref;
+    private String capBallPref;
+    private String parkingPref;
+    private String alliance;
 
+    private void getAutonomousPrefs()
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(hardwareMap.appContext);
+        particlePref = preferences.getString("How Many Particles Should We Shoot?", "");
+        beaconPref = preferences.getString("Which beacons should we activate?", "");
+        capBallPref = preferences.getString("Should we bump the cap ball off the center vortex?", "");
+        parkingPref = preferences.getString("Where should we park?", "");
+        alliance = preferences.getString("Which alliance are we on?", "");
+        telemetry.addData("Status", "Ready to run");
+        telemetry.addData("Alliance Colour", "Red or Blue");
+        telemetry.addLine("Particles: " + particlePref);
+        telemetry.addLine("Beacons: " + beaconPref);
+        telemetry.addLine("Cap Ball: " + capBallPref);
+        telemetry.addLine("Parking: " + parkingPref);
+        telemetry.addLine("Alliance: " + alliance);
+        telemetry.update();
+    }
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -70,6 +88,8 @@ public class TankTeleopIterativeMain extends OpMode
         telemetry.addData("spin1Motor", robot.spin1Motor.getPower());
         telemetry.addData("spin2Motor", robot.spin2Motor.getPower());
 
+        getAutonomousPrefs();
+
 
 
         robot.leftDrivePower = 0;
@@ -79,8 +99,6 @@ public class TankTeleopIterativeMain extends OpMode
         robot.systemFlyPower = robot.defaultFlyPower;
 
 
-        //Having flywheels using PID instead just power.
-        //Having flywheels using PID instead just power.
         robot.flyWheelMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.flyWheelMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -92,6 +110,7 @@ public class TankTeleopIterativeMain extends OpMode
         robot.rightDrivePower = gamepad1.right_stick_y;
 
     }
+
 //Basically adjusts the power based upon the current speed which is based upon encoder ticks over time.
     public void bangBang()
     {
@@ -177,28 +196,6 @@ public class TankTeleopIterativeMain extends OpMode
     public void init_loop() {
     }
 
-    public void adjustPID()
-    {
-        if(gamepad2.dpad_up)
-        {
-            kP += (1.0 * place);
-        }
-
-        if(gamepad2.dpad_down)
-        {
-            kP -= (1.0 * place);
-        }
-
-        if(gamepad1.dpad_left)
-        {
-            place *= 10.0;
-        }
-
-        if(gamepad2.left_bumper)
-        {
-            place *= 0.1;
-        }
-    }
 //A backup just incase bang bang doesn't work, we use this instead which compensates flywheel speed based upon battery power.
 public void voltageProportional()
 {
@@ -209,10 +206,6 @@ public void voltageProportional()
     motorOut = Range.clip(motorOut, 0, 1);
     setFPower(motorOut);
 }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         runtime.reset();
@@ -223,53 +216,42 @@ public void voltageProportional()
 
     }
 
+
     /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+    In this particular method, we use a colour sensor that is placed inside our intake system,
+    and we use it in order to determine whether or not our robot has intake the incorrect colour in order to spit it out.
+    In combination with the colour sensor an autonomous menu on our robot controller is used in order to select what Alliance
+     we are on to make sure we are spitting out the correct balls.
      */
-
-    public double colourSensorCheck(String teamColour)
+    public void colourSensorCheck()
     {
-        int red = robot.colourSensor.red();
-        int blue = robot.colourSensor.blue();
+        int[] colourSensor = robot.muxColor.getCRGB(robot.ports[2]);
 
-        int x = 0;
-
-
-        //averaging loop
-        telemetry.addData("redVal", red);
-        telemetry.addData("blueVal", blue);
-
-        telemetry.update();
-
-        //Different conditionals relating the colour sensor output + team Alliance colour.
-        if (teamColour.equals("blue")) {
-            if ((red) > blue) {
-                return .2;
-            }
-            else if (red < blue)
-            {
-                return .9;
-            }
-            else
-            {
-                return colourSensorCheck("blue");
-            }
-        }
-        else if (teamColour.equals("red"))
+        if (colourSensor[3] > 6000 && alliance.equals("Red Alliance"))
         {
-            if ((red) > blue)
+            double tempTime = runtime.seconds()+2;
+
+            while (runtime.seconds() < tempTime)
             {
-                return .2;
+                robot.spin1Motor.setPower(-1);
+                robot.spin2Motor.setPower(-1);
             }
-            else if (red < blue)
-            {
-                return .9;
-            }
-            else {
-                return colourSensorCheck("blue");
-            }
+            robot.spin1Motor.setPower(0);
+            robot.spin2Motor.setPower(0);
         }
-        return .5;
+        else if (colourSensor[1] > 6000 && alliance.equals("Blue Alliance"))
+        {
+            double tempTime = runtime.seconds() +2;
+
+            while (runtime.seconds() < tempTime)
+            {
+                robot.spin1Motor.setPower(-1);
+                robot.spin2Motor.setPower(-1);
+            }
+            robot.spin1Motor.setPower(0);
+            robot.spin2Motor.setPower(0);
+        }
+
     }
 
     @Override
@@ -295,9 +277,9 @@ public void voltageProportional()
 
         printVelocity();
 
+        colourSensorCheck();
 
 
-         //adjustPID();
         robot.innerIntakePower = gamepad2.right_stick_y;
         robot.outerIntakePower = gamepad2.left_stick_y;
 
@@ -305,7 +287,7 @@ public void voltageProportional()
         robot.rightDrivePower = gamepad1.right_stick_y;
 
 
-        //Flywheel Conditionals, allows the variability of power/speed
+        //Flywheel Controls as well as intake controls to a certain extent
          if (gamepad2.dpad_right) {
             robot.systemFlyPower = robot.defaultFlyPower;
         } else if (gamepad2.right_trigger > 0) {
@@ -326,7 +308,7 @@ public void voltageProportional()
             calculatePID();
         }
 
-        // Movement of linear slides - self explanatory.
+        // Movement of linear slides a = extend slides, b = retract slides
 
         if (gamepad2.a)
         {
@@ -382,9 +364,6 @@ public void voltageProportional()
         } else {
             halfSpeed = 1;
         }
-
-        //Controlling of Drift - DcMotor Braking configuration
-        //Marvin Servo Control, using 180 degree Servo on the Intake side of the Robot
 
         //Normalization of Intake System values, since it is driven by joysticks
         maxIntakeSystem = Math.max(Math.abs(robot.innerIntakePower), Math.abs(robot.outerIntakePower));

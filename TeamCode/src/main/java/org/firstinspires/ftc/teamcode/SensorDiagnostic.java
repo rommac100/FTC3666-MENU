@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwareTank;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import static java.lang.Thread.sleep;
 
@@ -137,13 +138,10 @@ public class SensorDiagnostic extends OpMode
         telemetry.addData("Right", rightQ);
         telemetry.addData("Center", centerQ);
 
-        telemetry.addData("Clear", robot.colourSensor.alpha());
-        telemetry.addData("Red  ", robot.colourSensor.red());
-        telemetry.addData("Green", robot.colourSensor.green());
-        telemetry.addData("Blue ", robot.colourSensor.blue());
         telemetry.addData("Distance", distance);
         telemetry.addData("endStop1", robot.limit1.returnState());
         telemetry.addData("endStop2", robot.limit2.returnState());
+        telemetry.addData("ultraDistance Inches", robot.ultraSonic.getDistance(DistanceUnit.INCH));
         //robot.ping.turnOn();
     }
 

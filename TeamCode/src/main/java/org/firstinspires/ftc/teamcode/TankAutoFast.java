@@ -653,7 +653,7 @@ public void bangBang() {
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
             telemetry.addData("motorLeft Ticks", robot.leftMotor.getCurrentPosition());
-            telemetry.addData("motorRight Ticks", robot.rightMotor.getCurrentPosition())
+            telemetry.addData("motorRight Ticks", robot.rightMotor.getCurrentPosition());
             robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }

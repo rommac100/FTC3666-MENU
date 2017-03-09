@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -53,6 +54,7 @@ public class HardwareTank
     public PingDistanceSensor ping = null;
     public LimitSwitch limit1 = null;
     public LimitSwitch limit2 = null;
+    public ModernRoboticsI2cRangeSensor ultraSonic = null;
 
     public VoltageSensor voltageSensor;
 
@@ -71,7 +73,7 @@ public class HardwareTank
     public double maxBangValue = .5; // for bangbang for the flywheels
 
     public MultiplexColorSensor muxColor;
-    public int[] ports = {0, 1};
+    public int[] ports = {0, 1, 2};
 
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
@@ -104,11 +106,12 @@ public class HardwareTank
         spin2Motor.setDirection(DcMotor.Direction.REVERSE);
         flyWheelMotor1.setDirection(DcMotor.Direction.REVERSE);
         device = hwMap.deviceInterfaceModule.get("deviceINT");
-        colourSensor = hwMap.colorSensor.get("colour_sensor");
 
         ping = new PingDistanceSensor(hwMap,"ping");
         limit1 = new LimitSwitch(hwMap, "limit1");
         limit2 = new LimitSwitch(hwMap, "limit2");
+
+        ultraSonic = hwMap.get(ModernRoboticsI2cRangeSensor.class, "mr_Range");
 
 
         capBallServo1 = hwMap.servo.get("cap1");
@@ -164,8 +167,8 @@ flickServoIn();
     }
     public void flickServoOut()
     {
-        flickerServo1.setPosition(.75);
-        flickerServo2.setPosition(.2);
+        flickerServo1.setPosition(.73);
+        flickerServo2.setPosition(.23);
     }
     public void flickServoIn()
     {
